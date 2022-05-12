@@ -8,7 +8,7 @@ WBUrl = 'https://discord.com/api/webhooks/854620225445560320/x5TTZDFuEIFNcZVIqI5
 URL2 = 'https://search.roblox.com/catalog/json?CatalogContext=2&Category=6&SortType=3&ResultsPerPage=1'
 
 while True :
-    Response = requests.get(URL)
+    Response = requests.get(URL2)
     if Response.status_code == 200:
         Response = Response.json()
         try:
@@ -19,7 +19,7 @@ while True :
                 URL = Asset['AbsoluteUrl']
 
                 Data = {
-                    "content" : "An asset has been updated.",
+                    "content" : "An asset has been updated. @everyone",
                     "username" : "Update bot"
                 }
 
