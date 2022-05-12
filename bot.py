@@ -1,15 +1,37 @@
-from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext
-import os
+import requests
+from time import sleep
+Interval = 3
 
-def start(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(f'Hello {update.effective_user.first_name}\nI am a sample Telegram bot made with python-telegram-bot!')
+# Results currently = 10
+URL = 'https://search.roblox.com/catalog/json?SortType=3&ResultsPerPage=10&CreatorID=1'
+WBUrl = 'https://discord.com/api/webhooks/854620225445560320/x5TTZDFuEIFNcZVIqI54o8GG6fL26cok4wFGgXkJc0rDcQdjClsGHljwUh7NR_wBgfm_'
+URL2 = 'https://search.roblox.com/catalog/json?CatalogContext=2&Category=6&SortType=3&ResultsPerPage=1'
 
-updater = Updater(os.environ.get("TOKEN"), use_context=True)
+while True :
+    Response = requests.get(URL)
+    if Response.status_code == 200:
+        Response = Response.json()
+        try:
+            for Asset in Response:
+                ID = Asset['AssetId']
+                Name = Asset['Name']
+                Desc = Asset['Description']
+                URL = Asset['AbsoluteUrl']
 
-updater.dispatcher.add_handler(CommandHandler('start', start))
+                Data = {
+                    "content" : "An asset has been updated.",
+                    "username" : "Update bot"
+                }
 
-print("Bot started successfully")
-
-updater.start_polling()
-updater.idle()
+                Data['embeds'] = [
+                    {
+                    "title" : Name,
+                    "description" : "ID : " + str(ID),
+                    "url" : URL
+                    }
+                ]
+                
+                requests.post(WBUrl,json=Data)
+        except Exception as e:
+            print(e)
+    sleep(Interval)
