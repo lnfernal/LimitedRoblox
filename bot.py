@@ -1,6 +1,8 @@
 import requests
 from time import sleep
+from datetime import datetime
 Interval = 5
+Registered = {}
 
 # Results currently = 10
 URL = 'https://search.roblox.com/catalog/json?SortType=3&ResultsPerPage=10&CreatorID=1'
@@ -17,6 +19,13 @@ while True :
                 Name = Asset['Name']
                 Desc = Asset['Description']
                 URL = Asset['AbsoluteUrl']
+                s = Asset['UpdatedDate']
+                Date = s[s.find("(")+1:s.find(")")]
+                Date = int(Date)
+                if Registered.get(ID) != None and Registered[ID] == Date:
+                    break
+                StrData = Date/1000
+                StrData = datetime.fromtimestamp(StrData).isoformat()
 
                 Data = {
                     "content" : "An asset has been updated. @everyone",
@@ -27,11 +36,13 @@ while True :
                     {
                     "title" : Name,
                     "description" : "ID : " + str(ID),
-                    "url" : URL
-                    }
+                    "url" : URL,
+                    "timestamp" : StrData
+                    },
                 ]
                 
                 requests.post(WBUrl,json=Data)
+                Registered[ID] = Date
         except Exception as e:
             print(e)
     sleep(Interval)
