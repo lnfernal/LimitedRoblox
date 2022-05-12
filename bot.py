@@ -1,6 +1,6 @@
 import requests
 from time import sleep
-Interval = 3
+Interval = 5
 
 # Results currently = 10
 URL = 'https://search.roblox.com/catalog/json?SortType=3&ResultsPerPage=10&CreatorID=1'
@@ -8,7 +8,7 @@ WBUrl = 'https://discord.com/api/webhooks/854620225445560320/x5TTZDFuEIFNcZVIqI5
 URL2 = 'https://search.roblox.com/catalog/json?CatalogContext=2&Category=6&SortType=3&ResultsPerPage=1'
 
 while True :
-    Response = requests.get(URL2)
+    Response = requests.get(URL)
     if Response.status_code == 200:
         Response = Response.json()
         try:
